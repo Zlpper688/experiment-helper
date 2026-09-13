@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>实验选课助手 - 课表设置</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>实验选课助手 · 课表设置</h1>
+    <p class="hint">冲突检测依据：课程的「星期 + 节组 + 周次」。实验节组 1=1-2节，2=3-4节，3=5-6节，4=7-8节，5=晚9节起。所有更改即时自动保存。</p>
+
+    <section>
+      <h2>方式一：上传课表 PDF 文件（推荐）</h2>
+      <ol class="hint">
+        <li>点「选择 PDF 文件」直接选中你的课表 PDF，无需打开或复制；</li>
+        <li>自动解析全部页面（支持跨页大表），<b>星期自动识别</b>，条目直接出现在下方列表。</li>
+      </ol>
+      <div class="btn-row">
+        <label class="btn primary">选择 PDF 文件<input type="file" id="pdf-file" accept="application/pdf,.pdf" hidden></label>
+        <span id="pdf-msg" class="msg"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>方式二：粘贴课表文字自动解析</h2>
+      <ol class="hint">
+        <li>用浏览器打开你的课表 PDF，按 <b>Ctrl+A</b> 全选、<b>Ctrl+C</b> 复制；</li>
+        <li>粘贴到下面文本框，点「解析并加入」；</li>
+        <li>解析出的条目会出现在下方列表，<b>星期</b>一列需要你手动补选（PDF 复制文本里没有星期信息）。</li>
+      </ol>
+      <textarea id="paste-box" rows="8" placeholder="把课表 PDF 复制的文字粘贴到这里……"></textarea>
+      <div class="btn-row">
+        <button id="btn-parse" class="btn primary">解析并加入</button>
+        <button id="btn-clear-paste" class="btn">清空文本框</button>
+        <span id="parse-msg" class="msg"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>方式三：手动点选周网格</h2>
+      <p class="hint">点格子 = 该时段整学期有课（周次默认 1-20，可在下方列表改）。点亮已有真实课程条目的格子会提示去列表里改。</p>
+      <table id="grid" class="grid"></table>
+    </section>
+
+    <section>
+      <h2>我的课表条目</h2>
+      <table id="entries" class="entries">
+        <thead>
+          <tr><th>课程名</th><th>星期</th><th>节组</th><th>周次</th><th>来源</th><th>操作</th></tr>
+        </thead>
+        <tbody id="entries-body"></tbody>
+      </table>
+      <div class="btn-row">
+        <button id="btn-add" class="btn">+ 手动加一条</button>
+        <span id="save-msg" class="msg ok"></span>
+      </div>
+    </section>
+
+    <section>
+      <h2>导入 / 导出</h2>
+      <div class="btn-row">
+        <button id="btn-export" class="btn">导出到文本框</button>
+        <button id="btn-import" class="btn">从文本框导入</button>
+        <button id="btn-wipe" class="btn danger">清空课表</button>
+      </div>
+      <textarea id="json-box" rows="6" placeholder="导出的 JSON 会显示在这里；导入时把 JSON 粘进来再点导入"></textarea>
+    </section>
+  </div>
+
+  <script src="shared.js"></script>
+  <script src="vendor/pdf.min.js"></script>
+  <script src="pdf-extract.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+/* options.css — 课表设置页样式 */
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 24px;
+  font-family: "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+  background: #f5f7fa;
+  color: #333;
+  font-size: 14px;
+}
+.wrap { max-width: 960px; margin: 0 auto; }
+h1 { font-size: 20px; margin: 0 0 4px; }
+h2 { font-size: 15px; margin: 0 0 10px; color: #1f3a5f; }
+section {
+  background: #fff;
+  border: 1px solid #e3e8ef;
+  border-radius: 10px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.hint { color: #7a8699; font-size: 12.5px; margin: 4px 0 10px; }
+.hint ol, .hint li { margin: 2px 0; padding-left: 18px; }
+textarea {
+  width: 100%;
+  border: 1px solid #ccd4e0;
+  border-radius: 8px;
+  padding: 8px;
+  font-family: Consolas, monospace;
+  font-size: 12.5px;
+  resize: vertical;
+}
+textarea:focus { outline: none; border-color: #3b82f6; }
+.btn {
+  padding: 6px 14px;
+  border: 1px solid #ccd4e0;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 13px;
+}
+.btn:hover { background: #f0f4ff; }
+.btn.primary { background: #2f6fed; border-color: #2f6fed; color: #fff; }
+.btn.primary:hover { background: #2560d8; }
+.btn.danger { color: #d33; }
+.btn.danger:hover { background: #fee; }
+.btn.small { padding: 2px 10px; font-size: 12px; }
+.btn-row { margin-top: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.msg { color: #c60; font-size: 12.5px; }
+.msg.ok { color: #2a2; }
+
+/* 周网格 */
+.grid { border-collapse: collapse; }
+.grid th, .grid td {
+  border: 1px solid #dde3ec;
+  width: 86px;
+  height: 40px;
+  text-align: center;
+  font-size: 12.5px;
+}
+.grid th { background: #f0f3f8; font-weight: 600; }
+.grid td { cursor: pointer; color: #2f6fed; font-weight: 700; user-select: none; }
+.grid td:hover { background: #eef4ff; }
+.grid td.on { background: #dcebff; }
+
+/* 条目表 */
+.entries { width: 100%; border-collapse: collapse; }
+.entries th, .entries td {
+  border-bottom: 1px solid #edf0f5;
+  padding: 6px 6px;
+  text-align: left;
+  font-size: 13px;
+  vertical-align: middle;
+}
+.entries th { color: #667; font-weight: 600; background: #f8fafc; }
+.entries input[type="text"] {
+  width: 100%;
+  border: 1px solid #dde3ec;
+  border-radius: 6px;
+  padding: 4px 6px;
+  font-size: 13px;
+}
+.entries input.weeks { width: 110px; }
+.entries select { border: 1px solid #dde3ec; border-radius: 6px; padding: 4px; }
+.entries select.need { border-color: #e6a23c; background: #fffaf0; }
+.entries td.src { color: #99a; font-size: 12px; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entries td.empty { text-align: center; color: #99a; padding: 18px; }
+.slot-chk { margin-right: 8px; white-space: nowrap; font-size: 12px; color: #556; }

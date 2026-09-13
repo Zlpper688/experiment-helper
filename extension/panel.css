@@ -1,0 +1,313 @@
+/* panel.css — 实验选课助手注入样式（前缀 lph-，避免与 layui 冲突） */
+
+.lph-panel {
+  background: #fff;
+  border: 1px solid #e6e6e6;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 10px 0 14px;
+  font-size: 13px;
+  color: #333;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  line-height: 1.6;
+}
+
+.lph-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.lph-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: #16b777;
+}
+
+.lph-stats {
+  color: #888;
+  flex: 1;
+}
+
+.lph-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0;
+}
+
+.lph-input {
+  border: 1px solid #d6d6d6;
+  border-radius: 6px;
+  padding: 5px 10px;
+  font-size: 13px;
+  outline: none;
+}
+
+.lph-input:focus {
+  border-color: #16b777;
+}
+
+#lph-kw {
+  width: 260px;
+}
+
+.lph-sort {
+  width: 150px;
+}
+
+.lph-chip {
+  border: 1px solid #d6d6d6;
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 3px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #555;
+}
+
+.lph-chip:hover {
+  border-color: #16b777;
+  color: #16b777;
+}
+
+.lph-chip.on {
+  background: #16b777;
+  border-color: #16b777;
+  color: #fff;
+}
+
+.lph-chk {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.lph-mini-btn {
+  border: 1px solid #16b777;
+  background: #fff;
+  color: #16b777;
+  border-radius: 6px;
+  padding: 3px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.lph-mini-btn:hover {
+  background: #16b777;
+  color: #fff;
+}
+
+.lph-sched {
+  border-top: 1px dashed #eee;
+  padding-top: 6px;
+}
+
+.lph-sched.warn {
+  color: #d08800;
+}
+
+.lph-sched.ok {
+  color: #16a370;
+}
+
+/* 节次单元格里的人话徽标 */
+.lph-badge {
+  font-size: 11px;
+  color: #1e9fff;
+  margin-top: 2px;
+}
+
+/* 冲突行 */
+tr.lph-conflict > td {
+  background: #fff1f0 !important;
+}
+
+.lph-conflict-tip {
+  font-size: 11px;
+  color: #e02e2e;
+  margin-top: 2px;
+}
+
+/* 可约且无冲突：淡绿提示（不改单元格背景，避免盖过冲突色） */
+tr.lph-open-row > td:first-child {
+  position: relative;
+}
+
+.lph-badge.lph-badge {
+  /* 提高特异性占位 */
+}
+
+/* ===== 一键预约按钮 ===== */
+.lph-quick-reserve {
+  display: inline-block;
+  border: 1px solid #ff9800;
+  background: #fff7e6;
+  color: #d46b08;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: all 0.2s;
+}
+
+.lph-quick-reserve:hover {
+  background: #ff9800;
+  color: #fff;
+}
+
+.lph-quick-reserve:disabled {
+  cursor: default;
+  opacity: 0.8;
+}
+
+.lph-quick-reserve.lph-success {
+  border-color: #16b777;
+  background: #16b777;
+  color: #fff;
+}
+
+/* ===== 余量高亮 ===== */
+.lph-seats-critical {
+  color: #e02e2e !important;
+  font-weight: 700;
+}
+
+.lph-seats-low {
+  color: #d08800 !important;
+  font-weight: 600;
+}
+
+/* ===== 已预约标记 ===== */
+tr.lph-reserved-row > td {
+  background: #f0f9ff !important;
+}
+
+tr.lph-reserved > td {
+  background: #e6ffed !important;
+}
+
+.lph-reserved-tag {
+  display: inline-block;
+  background: #1e9fff;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+/* ===== 实验间冲突（区别于课表冲突） ===== */
+tr.lph-exp-conflict > td {
+  background: #fffbe6 !important;
+}
+
+.lph-exp-tip {
+  color: #d08800 !important;
+}
+
+/* ===== 自动抢课按钮 ===== */
+.lph-auto-btn {
+  border-color: #ff5722;
+  color: #ff5722;
+}
+
+.lph-auto-btn:hover {
+  background: #ff5722;
+  color: #fff;
+}
+
+.lph-auto-btn.active {
+  background: #ff5722;
+  color: #fff;
+  animation: lph-pulse 1.5s infinite;
+}
+
+@keyframes lph-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.lph-auto-status {
+  font-size: 12px;
+  color: #888;
+}
+
+/* ===== 必做实验标记 ===== */
+.lph-mandatory-tag {
+  display: inline-block;
+  background: #e02e2e;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 11px;
+  margin-left: 4px;
+  font-weight: 600;
+}
+
+/* ===== 同类已选标记 ===== */
+tr.lph-dup-row > td {
+  background: #f5f5f5 !important;
+  opacity: 0.7;
+}
+
+.lph-dup-tag {
+  display: inline-block;
+  background: #bfbfbf;
+  color: #fff;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 11px;
+  margin-left: 4px;
+}
+
+/* ===== 状态徽标（每行 opCell 最前面） ===== */
+.lph-status-tag {
+  display: inline-block;
+  border-radius: 4px;
+  padding: 1px 8px;
+  font-size: 11px;
+  margin-right: 4px;
+  font-weight: 600;
+  color: #fff;
+}
+.lph-status-ok { background: #52c41a; }
+.lph-status-reserved { background: #1e9fff; }
+.lph-status-full { background: #e02e2e; }
+.lph-status-conflict { background: #e02e2e; }
+.lph-status-exp { background: #d08800; }
+.lph-status-dup { background: #bfbfbf; }
+.lph-status-unwanted { background: #8c8c8c; }
+
+/* ===== 不想选行 + 按钮 ===== */
+tr.lph-unwanted-row > td {
+  background: #fafafa !important;
+  opacity: 0.6;
+}
+
+.lph-unwanted-btn {
+  border: 1px solid #bfbfbf;
+  background: #fafafa;
+  color: #8c8c8c;
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 11px;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: all 0.2s;
+}
+
+.lph-unwanted-btn:hover {
+  background: #8c8c8c;
+  color: #fff;
+}
+
+/* ===== 教师下拉 ===== */
+.lph-teacher {
+  width: 120px;
+}
