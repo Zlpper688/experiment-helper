@@ -261,7 +261,7 @@ document.getElementById('quizForm').addEventListener('submit', function() {
       method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="XXX">
     <input type="hidden" name="exp_plan_id" value="4915">
-    <input type="hidden" name="exp_name" value="分光计的调整与使用-4学时">
+    <input type="hidden" name="exp_name" value="示例实验A-4学时">
     <input type="hidden" name="upload_type" value="homepage">
     <input type="file" name="image_files[]" accept=".jpg,.jpeg,.png,.gif">
     <button type="submit" name="upload_action" value="save">确认上传</button>
@@ -274,7 +274,7 @@ document.getElementById('quizForm').addEventListener('submit', function() {
       method="post" enctype="multipart/form-data">
     <input type="hidden" name="csrf_token" value="XXX">
     <input type="hidden" name="exp_plan_id" value="4915">
-    <input type="hidden" name="exp_name" value="分光计的调整与使用-4学时">
+    <input type="hidden" name="exp_name" value="示例实验A-4学时">
     <input type="hidden" name="upload_type" value="report">
     <input type="file" name="image_files[]" accept=".jpg,.jpeg,.png,.gif" multiple>
     <button type="submit" name="upload_action" value="save">确认上传</button>
