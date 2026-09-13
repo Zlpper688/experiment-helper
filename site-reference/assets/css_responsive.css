@@ -1,0 +1,205 @@
+﻿/* ============================================
+   ååºå¼æ ·å¼ - ææºç«¯éé
+   ä»ä¿®æ¹æ¾ç¤ºæ ·å¼ï¼ä¸æ¹åä»»ä½åè½
+   ============================================ */
+
+/* ææºç«¯æ±å ¡èåæé®ï¼é»è®¤éèï¼ææºç«¯æ¾ç¤ºï¼ */
+.mobile-menu-toggle {
+    display: none;
+}
+
+/* é®ç½©å±ï¼ææºç«¯ç¹å»é®ç½©å³é­èåï¼ */
+.mobile-overlay {
+    display: none;
+}
+
+/* ============ ææºç«¯éé (768pxåä»¥ä¸) ============ */
+@media screen and (max-width: 768px) {
+    /* æ¾ç¤ºæ±å ¡èåæé® */
+    .mobile-menu-toggle {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 50px;
+        height: 60px;
+        background: #23262E;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        z-index: 1002;
+        border: none;
+        outline: none;
+    }
+
+    /* é®ç½©å± */
+    .mobile-overlay {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s, visibility 0.3s;
+    }
+    .mobile-overlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* é¡¶é¨å¯¼èªæ è°æ´ */
+    .layui-header {
+        padding-left: 50px;
+    }
+    .layui-header .layui-logo {
+        font-size: 14px;
+        left: 50px;
+    }
+    .layui-header .layui-nav {
+        margin-right: 5px;
+    }
+    .layui-header .layui-nav .layui-nav-item a {
+        padding: 0 10px;
+    }
+
+    /* å·¦ä¾§èåæ  - æ¹ä¸ºæ½å±å¼ */
+    .layui-side {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        width: 200px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        z-index: 1001;
+    }
+    .layui-side.open {
+        transform: translateX(0);
+    }
+    .layui-side .layui-side-scroll {
+        width: 200px;
+    }
+
+    /* åå®¹åºå - å¨å®½ */
+    .layui-body {
+        left: 0 !important;
+        padding: 10px !important;
+    }
+
+    /* è¡¨æ ¼æ¨ªåæ»å¨ - è®©ææè¡¨æ ¼å®¹å¨æ¯ææ»å¨ */
+    .layui-table {
+        min-width: 600px;
+        width: 100% !important;
+    }
+    /* è¡¨æ ¼ç¶å®¹å¨èªå¨æ»å¨ */
+    .layui-card-body,
+    .experiment-table,
+    .card-body,
+    .layui-tab-content {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    /* data-table ä¹æ¯ææ»å¨ */
+    .data-table {
+        min-width: 600px;
+        width: 100% !important;
+    }
+    .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* å¡çé´è·ç¼©å° */
+    .layui-card {
+        margin-bottom: 10px;
+    }
+    .layui-card-header {
+        padding: 10px 15px;
+        font-size: 15px;
+    }
+    .layui-card-body {
+        padding: 10px;
+    }
+
+    /* æé®ç¼©å° */
+    .layui-btn-sm {
+        padding: 0 8px;
+        font-size: 12px;
+    }
+    .layui-btn {
+        padding: 0 10px;
+        font-size: 13px;
+    }
+
+    /* è¡¨ååç´ è°æ´ */
+    .layui-input,
+    .layui-select,
+    .layui-textarea {
+        font-size: 14px;
+    }
+    .layui-form-item {
+        margin-bottom: 10px;
+    }
+    .layui-form-label {
+        padding: 8px 5px;
+        width: 70px;
+        font-size: 13px;
+    }
+    .layui-input-block {
+        margin-left: 80px;
+    }
+
+    /* åé¡µç»ä»¶è°æ´ */
+    .layui-laypage a,
+    .layui-laypage span {
+        padding: 0 8px;
+        font-size: 12px;
+    }
+
+    /* å¼¹çªè°æ´ */
+    .layui-layer {
+        max-width: 95% !important;
+    }
+    .layui-layer-content {
+        overflow-x: auto;
+    }
+
+    /* é¦é¡µä¿¡æ¯å¡çç½æ ¼è°æ´ä¸ºåå */
+    .layui-col-xs6,
+    .layui-col-md3 {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* å®éªæµè¯é¡µé¢è°æ´ */
+    .quiz-container {
+        padding: 5px !important;
+    }
+    .question-card {
+        padding: 10px !important;
+        margin-bottom: 10px !important;
+    }
+    .options {
+        margin-left: 5px !important;
+    }
+
+    /* æç´¢è¡¨ååè¡æ¾ç¤º */
+    .search-form {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+    }
+    .search-form .layui-input-inline {
+        width: calc(50% - 5px);
+        margin: 0 0 5px 0;
+    }
+    .search-form .layui-btn {
+        margin: 0;
+    }
+}
+

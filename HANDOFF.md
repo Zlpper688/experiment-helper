@@ -48,6 +48,8 @@
 
 **风险**：学校改版列序会直接破坏解析。改动解析前先 `console.table(parseRows(document.querySelector('table')))` 核对。
 
+> 📎 原始依据见 [site-reference/pages/live_experimentList.html](site-reference/pages/live_experimentList.html)（站点真实快照，已脱敏），完整路由与业务流程见 [site-reference/WEBSITE_BUSINESS_LOGIC_ANALYSIS.md](site-reference/WEBSITE_BUSINESS_LOGIC_ANALYSIS.md)。
+
 ## 五、领域知识：时间表与冲突规则（最容易改错）
 
 **节次码** `周-星期-场`：`3-1-2` = 第3周 · 周一 · 第2场。星期 1–7，场次 1–5。

@@ -1,0 +1,333 @@
+﻿﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开放实验教学管理系统 - 登录</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+            font-family: 'Microsoft YaHei', 'PingFang SC', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .login-container {
+            width: 900px;
+            height: 500px;
+            display: flex;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            overflow: hidden;
+            background: white;
+        }
+        
+        .login-left {
+            width: 50%;
+            background: linear-gradient(135deg, #6b9dc7 0%, #4a7ba7 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-left::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.12) 0%, transparent 60%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        .login-left h2 {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        
+        .login-left p {
+            font-size: 14px;
+            line-height: 1.8;
+            text-align: center;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 1;
+            max-width: 300px;
+        }
+        
+        .login-left .image-wrapper {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid rgba(255,255,255,0.25);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .login-left img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .login-left:hover img {
+            transform: scale(1.05);
+        }
+        
+        .login-right {
+            width: 50%;
+            background: white;
+            padding: 50px 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .login-title {
+            font-size: 26px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #2c3e50;
+            text-align: center;
+            position: relative;
+        }
+        
+        .login-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #6b9dc7;
+            border-radius: 2px;
+        }
+        
+        .layui-form-item {
+            margin-bottom: 25px;
+        }
+        
+        .layui-form-label {
+            width: 80px;
+            font-weight: 500;
+            color: #555;
+            padding: 9px 15px;
+            text-align: right;
+        }
+        
+        .layui-input-block {
+            margin-left: 80px;
+            min-height: 36px;
+        }
+        
+        .layui-input {
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+            height: 40px;
+            line-height: 40px;
+        }
+        
+        .layui-input:focus {
+            border-color: #6b9dc7;
+            box-shadow: 0 0 0 3px rgba(107, 157, 199, 0.12);
+        }
+        
+        .layui-btn {
+            width: 100%;
+            height: 44px;
+            font-size: 16px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, #6b9dc7 0%, #4a7ba7 100%);
+            border: none;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .layui-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(107, 157, 199, 0.25);
+        }
+        
+        .error-alert {
+            background: #fff2f0;
+            border: 1px solid #ffccc7;
+            color: #ff4d4f;
+            padding: 12px 16px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        /* 响应式优化 */
+        @media screen and (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .login-container {
+                width: 100%;
+                max-width: 400px;
+                height: auto;
+                flex-direction: column;
+                border-radius: 12px;
+            }
+            
+            .login-left {
+                width: 100%;
+                padding: 30px 20px;
+                min-height: 200px;
+            }
+            
+            .login-left h2 {
+                font-size: 22px;
+            }
+            
+            .login-left .image-wrapper {
+                width: 120px;
+                height: 120px;
+                display: none;
+            }
+            
+            .login-right {
+                width: 100%;
+                padding: 30px 25px;
+            }
+            
+            .login-title {
+                font-size: 22px;
+                margin-bottom: 25px;
+            }
+            
+            .layui-form-label {
+                width: 70px;
+                padding: 9px 10px;
+            }
+            
+            .layui-input-block {
+                margin-left: 70px;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container fade-in">
+        <div class="login-left">
+            <h2>开放实验教学管理系统 V3.0</h2>
+            <p>便捷的实验课程预约平台<br>为学生和教师提供高效的实验管理服务</p>
+            <div class="image-wrapper">
+                <img src="image/60037d989c77817230e75bd9c7e2e905f343a406.jpg" 
+                     alt="实验课程系统" 
+                     onerror="this.src='image/a535344d9e87f4fe55ff419ee12363756e8334be.jpg'">
+            </div>
+        </div>
+        <div class="login-right">
+            <div class="login-title">用户登录</div>
+            
+                        
+            <form class="layui-form" action="index.php?controller=login&action=login" method="post">
+                    <input type="hidden" name="csrf_token" value="REDACTED">                <div class="layui-form-item">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="role" value="student" title="学生" checked>
+                        <input type="radio" name="role" value="teacher" title="教师">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" 
+                               name="username" 
+                               required 
+                               lay-verify="required" 
+                               placeholder="请输入学号/教师号" 
+                               class="layui-input"
+                               autocomplete="username">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-block">
+                        <input type="password" 
+                               name="password" 
+                               required 
+                               lay-verify="required" 
+                               placeholder="请输入密码" 
+                               class="layui-input"
+                               autocomplete="current-password">
+                    </div>
+                </div>
+                
+                <div class="layui-form-item" style="margin-top: 30px;">
+                    <div class="layui-input-block">
+                        <button class="layui-btn layui-btn-normal" lay-submit lay-filter="login">
+                            <i class="layui-icon layui-icon-username" style="margin-right: 5px;"></i>登录
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['form'], function() {
+            var form = layui.form;
+            form.render();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>实验报告下载 - 学生预约实验课程系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+	<link rel="stylesheet" href="css/responsive.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .layui-body {
+            padding: 20px;
+        }
+        .download-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .download-card-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #1E9FFF;
+        }
+        .warning-tip {
+            color: #e74c3c;
+            font-size: 14px;
+            padding: 10px 15px;
+            background: #fdf2f2;
+            border-left: 4px solid #e74c3c;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .layui-form-item .layui-form-label {
+            width: 100px;
+        }
+        .layui-form-item .layui-input-block {
+            margin-left: 130px;
+        }
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: #f0f2f5;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid #e0e0e0;
+            transition: all 0.2s;
+        }
+        .radio-item input[type="radio"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: #1E9FFF;
+        }
+        .radio-item label {
+            cursor: pointer;
+            flex: 1;
+            margin: 0;
+        }
+        .radio-item:has(input[type="radio"]:checked) {
+            background: #1E9FFF;
+            color: white;
+            border-color: #1E9FFF;
+        }
+        .current-user {
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">学生预约实验课程系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>翟宏鹏</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="index.php?controller=login&action=logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 左侧菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=index">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=experimentList">实验课程查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=myExperiments">我的实验</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=testList">实验测试</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=processData">实验过程数据</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=resultData">实验数据处理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=scoreQuery">成绩查询</a>
+                    </li>
+                    <li class="layui-nav-item layui-this">
+                        <a href="index.php?controller=student&action=downloadReport">下载实验报告</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=previewReport">预习报告上传</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="layui-body">
+            <div class="download-card">
+                <div class="download-card-title"><i class="layui-icon layui-icon-download-circle"></i> 选择需要下载的实验报告</div>
+
+                <div class="current-user">
+                    当前用户：翟宏鹏（学号：[学号已隐去]）
+                </div>
+
+                <div class="warning-tip">
+                    <i class="layui-icon layui-icon-tips"></i> 未预约实验项目，可提前在该页下载！<br>
+                    <i class="layui-icon layui-icon-tips"></i> 已预约项目，在"我的实验"中查看实验并下载！
+                </div>
+
+                <form class="layui-form" onsubmit="return downFile();">
+				<input type="hidden" name="csrf_token" value="REDACTED">                    <div class="layui-form-item">
+                        <label class="layui-form-label">实验项目：</label>
+                        <div class="layui-input-block">
+                            <div class="radio-group">
+                                <div class="radio-item"><input type="radio" name="fname" id="fname7" value="7"><label for="fname7">PN结</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname11" value="11"><label for="fname11">分光计</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname8" value="8"><label for="fname8">理想气体</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname10" value="10"><label for="fname10">牛顿环</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname2" value="2"><label for="fname2">示波器</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname9" value="9"><label for="fname9">显微系统</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname12" value="12"><label for="fname12">虚拟实验：重力加速度</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname3" value="3"><label for="fname3">模拟静电场</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname1" value="1"><label for="fname1">霍尔元件</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname4" value="4"><label for="fname4">直流电桥</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname5" value="5"><label for="fname5">刚体转动惯量</label></div>
+                                <div class="radio-item"><input type="radio" name="fname" id="fname6" value="6"><label for="fname6">拉伸法</label></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">随机码</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="random" class="layui-input" placeholder="默认0" value="EB8FEBC2D63E48EA" disabled style="width: 200px; background: #f5f5f5;">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-input-block" style="margin-left: 130px;">
+                            <button type="submit" class="layui-btn layui-btn-normal">
+                                <i class="layui-icon layui-icon-download-circle"></i> 立即下载
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use('form', function(){
+            var form = layui.form;
+            // 如地址栏已带 fname 参数，则自动选中
+            var urlParams = new URLSearchParams(location.search);
+            if (urlParams.has('fname')) {
+                var fnameVal = urlParams.get('fname');
+                var radios = document.querySelectorAll('input[name="fname"]');
+                for (var i = 0; i < radios.length; i++) {
+                    if (radios[i].value === fnameVal) {
+                        radios[i].checked = true;
+                        break;
+                    }
+                }
+            }
+        });
+
+        function downFile() {
+            var code = document.querySelector('input[name="fname"]:checked');
+            if (!code) {
+                layui.layer.msg('请先选择下载的报告');
+                return false;
+            }
+            /* 随机码取自 disabled 的那个 input */
+            var random = document.getElementById('random').value || 0;
+            location.href = 'pdf6/downloadall.php?fname=' + code.value + '&random=' + random;
+            return false;
+        }
+    </script>
+	<script src="js/responsive.js"></script>
+</body>
+</html>

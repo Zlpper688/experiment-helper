@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生首页 - 学生预约实验管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+	<link rel="stylesheet" href="css/responsive.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .layui-body { padding: 20px; }
+        .welcome-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .welcome-card h2 { margin-bottom: 10px; }
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .info-card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+        .info-card-header i {
+            margin-right: 8px;
+            color: #1E9FFF;
+        }
+        .info-card-body {
+            padding: 20px;
+        }
+        .info-item {
+            display: inline-block;
+            width: 23%;
+            margin-bottom: 15px;
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 3px solid #1E9FFF;
+        }
+        .info-item .label {
+            color: #999;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+        .info-item .value {
+            color: #333;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .experiment-table {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .layui-table th { text-align: center; }
+        .layui-table td { text-align: center; }
+        .status-reserved { color: #1E9FFF; font-weight: bold; }
+        .status-attended { color: #9C27B0; font-weight: bold; }
+        .status-completed { color: #5FB878; font-weight: bold; }
+        .status-absent { color: #FF5722; font-weight: bold; }
+        .score-zero { color: #FF5722; font-weight: bold; }
+        .score-normal { color: #5FB878; font-weight: bold; }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">学生预约实验课程系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>翟宏鹏</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="index.php?controller=login&action=logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 左侧菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item layui-this">
+                        <a href="index.php?controller=student&action=index">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=experimentList">实验课程查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=myExperiments">我的实验</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=testList">实验测试</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=processData">实验过程数据</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=resultData">实验数据处理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=scoreQuery">成绩查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=downloadReport">下载实验报告</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=previewReport">预习报告上传</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- 内容区域 -->
+        <div class="layui-body">
+            <!-- 欢迎卡片 -->
+            <div class="welcome-card">
+                <h2>欢迎，翟宏鹏！</h2>
+                <p>这是学生预约实验管理系统，您可以在这里查看实验课程、进行测试、预约实验。</p>
+            </div>
+
+            <!-- 学生个人信息 -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="layui-icon layui-icon-username"></i>个人信息
+                </div>
+                <div class="info-card-body">
+                    <div class="info-item">
+                        <div class="label">班级</div>
+                        <div class="value">计科2502</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">学号</div>
+                        <div class="value">[学号已隐去]</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">姓名</div>
+                        <div class="value">翟宏鹏</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="label">本学期课程</div>
+                        <div class="value">物理实验B</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 学生实验信息 -->
+            <div class="info-card">
+                <div class="info-card-header">
+                    <i class="layui-icon layui-icon-date"></i>实验信息
+                </div>
+                <div class="info-card-body" style="padding:0;">
+                    <table class="layui-table" style="margin:0;">
+                        <thead>
+                            <tr>
+                                <th>实验名称</th>
+                                <th>实验课节</th>
+                                <th>实验教师</th>
+                                <th>实验状态</th>
+                                <th>当前成绩</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                                                                    <tr>
+                                <td>分光计的调整与使用-4学时</td>
+                                <td>3-3-3</td>
+                                <td>张超</td>
+                                <td>
+                                                                        <span class="status-reserved">已预约</span>
+                                </td>
+                                <td>
+                                                                            <span style="color:#999;">-</span>
+                                                                    </td>
+                            </tr>
+                                                        <tr>
+                                <td>PN结特性研究及玻尔兹曼常数的测定-2学时</td>
+                                <td>3-4-3</td>
+                                <td>李健</td>
+                                <td>
+                                                                        <span class="status-reserved">已预约</span>
+                                </td>
+                                <td>
+                                                                            <span style="color:#999;">-</span>
+                                                                    </td>
+                            </tr>
+                                                                                </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 退回报告信息 -->
+                    </div>
+    </div>
+    
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['element'], function(){
+            var element = layui.element;
+        });
+    </script>
+	<script src="js/responsive.js"></script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>实验测试 - 学生预约实验管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+	<link rel="stylesheet" href="css/responsive.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .layui-body { padding: 20px; }
+        .test-status-passed { color: #5FB878; font-weight: bold; }
+        .test-status-failed { color: #FF5722; }
+        .test-status-untested { color: #999; }
+        .test-score { font-size: 18px; font-weight: bold; }
+        .experiment-card { margin-bottom: 15px; }
+        .experiment-info { padding: 15px; }
+        .test-action { text-align: right; padding: 10px 15px; background: #f8f8f8; }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">学生预约实验课程系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>翟宏鹏</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="index.php?controller=login&action=logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- 左侧菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=index">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=experimentList">实验课程查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=myExperiments">我的实验</a>
+                    </li>
+                    <li class="layui-nav-item layui-this">
+                        <a href="index.php?controller=student&action=testList">实验测试</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=processData">实验过程数据</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=resultData">实验数据处理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=scoreQuery">成绩查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=downloadReport">下载实验报告</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=previewReport">预习报告上传</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 主体内容 -->
+        <div class="layui-body">
+                        
+            
+            <h2 style="margin-bottom: 20px;">
+                <i class="layui-icon layui-icon-survey"></i> 实验测试
+            </h2>
+            
+            <div style="margin-bottom: 15px; padding: 10px; background: #fff; border-radius: 4px;">
+                <i class="layui-icon layui-icon-tips"></i>
+                <span style="color: #666;">提示：按实验名称进行测试，通过测试（≥12分）后，同一实验的所有课节都可以预约</span>
+            </div>
+
+            <div class="layui-row layui-col-space15">
+                                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">PN结特性研究及玻尔兹曼常数的测定-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼222                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 19:09)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">分光计的调整与使用-4学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼218                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：20.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 19:34)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">刚体转动惯量实验-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：物理实验室                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 19:46)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">拉伸法测金属丝杨氏模量-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：物理实验室                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：20.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 19:54)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">理想气体状态方程-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼221                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 20:10)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">牛顿环实验-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼224                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 21:26)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">示波器的原理与使用-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼202                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 21:39)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">物理实验测试----禁止预约</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：物理实验室                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                            <span class="test-status-untested">
+                                            <i class="layui-icon layui-icon-close-fill"></i> 
+                                            测试状态：未测试
+                                        </span>
+                                        <p style="color: #999; font-size: 12px; margin-top: 5px;">
+                                            需通过测试（≥12分）后方可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                    <a href="index.php?controller=student&action=startTest&flowNum=4933" 
+                                       class="layui-btn layui-btn-sm layui-btn-normal">
+                                        <i class="layui-icon layui-icon-survey"></i> 开始测试
+                                    </a>
+                                                            </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">显微系统搭建及参数测量-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：物理实验室                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 21:54)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">虚拟仿真实验：重力加速度的测量-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼225                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 22:19)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">用恒定电流模拟静电场-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：物理实验室                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：14.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 22:42)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <a href="index.php?controller=student&action=startTest&flowNum=4848"
+                                       class="layui-btn layui-btn-sm layui-btn-normal">
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </a>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">用霍尔元件测磁场-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼201                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：18.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 22:08)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                        <div class="layui-col-md6 layui-col-lg4">
+                        <div class="layui-card experiment-card">
+                            <div class="experiment-info">
+                                <h3 style="margin-bottom: 10px;">直流电桥测电阻-2学时</h3>
+                                <p style="color: #666; margin-bottom: 10px;">
+                                    <i class="layui-icon layui-icon-location"></i> 
+                                    地点：逸夫馆二楼204                                </p>
+
+                                
+                                <div style="border-top: 1px solid #eee; padding-top: 10px; margin-top: 10px;">
+                                                                                                                                                            <span class="test-status-passed" style="color: #5FB878;">
+                                            <i class="layui-icon layui-icon-ok-circle"></i>
+                                            测试状态：合格                                        </span>
+                                        <div style="margin-top: 5px;">
+                                            <span class="test-score" style="color: #5FB878;">
+                                                成绩：20.00分
+                                            </span>
+                                                                                        <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                                (2026-09-08 22:01)
+                                            </span>
+                                                                                    </div>
+                                        <p style="color: #5FB878; font-size: 12px; margin-top: 5px;">
+                                            <i class="layui-icon layui-icon-ok"></i> 合格后所有课节都可预约
+                                        </p>
+                                                                    </div>
+                            </div>
+                            <div class="test-action">
+                                                                                                        <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-ok"></i> 已通过
+                                    </button>
+                                                                                                                                                <button class="layui-btn layui-btn-sm layui-btn-disabled" disabled>
+                                        <i class="layui-icon layui-icon-refresh"></i> 重新测试
+                                    </button>
+                                                                                                </div>
+                        </div>
+                    </div>
+                                                </div>
+        </div>
+    </div>
+
+    <script src="../layui/layui.js"></script>
+    <script>
+    layui.use(['element', 'layer'], function(){
+        var element = layui.element;
+        var layer = layui.layer;
+    });
+    </script>
+	<script src="js/responsive.js"></script>
+</body>
+</html>

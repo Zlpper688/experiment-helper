@@ -1,0 +1,402 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>预习报告上传 - 学生预约实验管理系统</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+	<link rel="stylesheet" href="css/responsive.css">
+    <style>
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .layui-body {
+            padding: 20px;
+        }
+        .data-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .exp-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #1E9FFF;
+            color: #333;
+        }
+        .field-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 25px 0 15px 0;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #1E9FFF;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .section-title .status-badge {
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: normal;
+        }
+        .status-submitted {
+            background: #5FB878;
+            color: white;
+        }
+        .status-not-submitted {
+            background: #FFB800;
+            color: white;
+        }
+        .upload-area {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            background: #fafafa;
+        }
+        .upload-area:hover {
+            border-color: #1E9FFF;
+            background: #f0f8ff;
+        }
+        .upload-area.disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        .pdf-preview {
+            margin-top: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .section-actions {
+            margin-top: 15px;
+            margin-bottom: 25px;
+            text-align: right;
+        }
+        .btn-save {
+            background-color: #999;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-submit {
+            background-color: #1E9FFF;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-save:hover {
+            background-color: #777;
+        }
+        .btn-submit:hover {
+            background-color: #0D8EF5;
+        }
+        .overall-status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .overall-status.all-submitted {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+        .overall-status.partial {
+            background: #fff8e1;
+            color: #f57f17;
+            border: 1px solid #ffe082;
+        }
+        .subsection-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            padding-left: 10px;
+            border-left: 4px solid #1E9FFF;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .subsection-title .status-badge {
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 4px;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">学生预约实验课程系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>翟宏鹏</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="index.php?controller=login&action=logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 左侧菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=index">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=experimentList">实验课程查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=myExperiments">我的实验</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=testList">实验测试</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=processData">实验过程数据</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=resultData">实验数据处理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=scoreQuery">成绩查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=downloadReport">下载实验报告</a>
+                    </li>
+                    <li class="layui-nav-item layui-this">
+                        <a href="index.php?controller=student&action=previewReport">预习报告上传</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="layui-body">
+            
+            
+            <div class="data-card">
+                <div class="exp-title">
+                    <i class="layui-icon layui-icon-upload"></i>
+                    预习报告上传
+                                        <span style="font-size: 16px; color: #1E9FFF; margin-left: 10px;">
+                        分光计的调整与使用-4学时                    </span>
+                                    </div>
+
+                
+                <!-- 整体提交状态 -->
+                                <div class="overall-status partial">
+                    <i class="layui-icon layui-icon-about"></i>
+                    请完成首页上传（1张）及预习报告上传（最多3张）
+                </div>
+                
+                <!-- 上传文件区域 -->
+                <div class="section-title">
+                    <span>上传文件</span>
+                </div>
+
+                <!-- ==================== 首页上传（仅1张）==================== -->
+                <div class="subsection-title">
+                    <span>首页上传</span>
+                    <span class="status-badge status-not-submitted">
+                        未提交                    </span>
+                </div>
+                                <form class="layui-form" action="index.php?controller=student&action=uploadPreviewFile" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="csrf_token" value="REDACTED">                    <input type="hidden" name="exp_plan_id" value="4915">
+                    <input type="hidden" name="exp_name" value="分光计的调整与使用-4学时">
+                    <input type="hidden" name="upload_type" value="homepage">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label field-label"><i class="layui-icon layui-icon-home"></i> 首页</label>
+                        <div class="layui-input-block">
+                            <div class="upload-area" id="uploadAreaHome">
+                                <i class="layui-icon layui-icon-upload" style="font-size: 40px; color: #999;"></i>
+                                <p style="margin-top: 10px; color: #666;">点击上传或拖拽图片到此处</p>
+                                <p style="margin-top: 5px; color: #999; font-size: 12px;">支持 jpg, jpeg, png, gif 格式，文件大小不超过 10MB，仅限1张</p>
+                                <input type="file" name="image_files[]" id="homeFileInput" accept=".jpg,.jpeg,.png,.gif" style="display:none;">
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="document.getElementById('homeFileInput').click();" style="margin-top: 10px;">
+                                    <i class="layui-icon layui-icon-upload"></i> 选择文件
+                                </button>
+                            </div>
+                                                        <div id="homeFileNameDisplay" style="margin-top: 10px; color: #1E9FFF; display: none;">
+                                <i class="layui-icon layui-icon-ok-circle"></i> 已选择：<span id="homeSelectedFileName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <button type="submit" name="upload_action" value="save" class="layui-btn btn-save">
+                            <i class="layui-icon layui-icon-edit"></i> 确认上传
+                        </button>
+                        <button type="submit" name="upload_action" value="submit" class="btn-submit" onclick="return confirm('提交后将无法修改首页图片，确定吗？');">
+                            <i class="layui-icon layui-icon-ok"></i> 提交
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- ==================== 预习报告上传（最多3张）==================== -->
+                <div class="subsection-title">
+                    <span>预习报告上传</span>
+                    <span class="status-badge status-not-submitted">
+                        未提交                    </span>
+                </div>
+                                <form class="layui-form" action="index.php?controller=student&action=uploadPreviewFile" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="csrf_token" value="REDACTED">                    <input type="hidden" name="exp_plan_id" value="4915">
+                    <input type="hidden" name="exp_name" value="分光计的调整与使用-4学时">
+                    <input type="hidden" name="upload_type" value="report">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label field-label"><i class="layui-icon layui-icon-file"></i> 预习报告</label>
+                        <div class="layui-input-block">
+                            <div class="upload-area" id="uploadAreaReport">
+                                <i class="layui-icon layui-icon-upload" style="font-size: 40px; color: #999;"></i>
+                                <p style="margin-top: 10px; color: #666;">点击上传或拖拽图片到此处</p>
+                                <p style="margin-top: 5px; color: #999; font-size: 12px;">支持 jpg, jpeg, png, gif 格式，文件大小不超过 10MB，最多3张</p>
+                                <input type="file" name="image_files[]" id="reportFileInput" accept=".jpg,.jpeg,.png,.gif" style="display:none;" multiple>
+                                <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" onclick="document.getElementById('reportFileInput').click();" style="margin-top: 10px;">
+                                    <i class="layui-icon layui-icon-upload"></i> 选择文件
+                                </button>
+                            </div>
+                                                        <div id="reportFileNameDisplay" style="margin-top: 10px; color: #1E9FFF; display: none;">
+                                <i class="layui-icon layui-icon-ok-circle"></i> 已选择：<span id="reportSelectedFileName"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="section-actions">
+                        <button type="submit" name="upload_action" value="save" class="layui-btn btn-save">
+                            <i class="layui-icon layui-icon-edit"></i> 确认上传
+                        </button>
+                        <button type="submit" name="upload_action" value="submit" class="btn-submit" onclick="return confirm('提交后将无法修改预习报告图片，确定吗？');">
+                            <i class="layui-icon layui-icon-ok"></i> 提交
+                        </button>
+                    </div>
+                </form>
+                
+                <div style="margin-top: 30px; text-align: center;">
+                    <a href="index.php?controller=student&action=previewReport" class="layui-btn layui-btn-primary">
+                        返回预习报告列表
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['form', 'element'], function() {
+            var form = layui.form;
+            var element = layui.element;
+            form.render();
+        });
+
+        // ==================== 首页文件选择 ====================
+        var homeFileInput = document.getElementById('homeFileInput');
+        if (homeFileInput) {
+            homeFileInput.addEventListener('change', function(e) {
+                var files = e.target.files;
+                if (files.length > 0) {
+                    document.getElementById('homeSelectedFileName').textContent = files[0].name;
+                    document.getElementById('homeFileNameDisplay').style.display = '';
+                } else {
+                    document.getElementById('homeFileNameDisplay').style.display = 'none';
+                }
+            });
+        }
+
+        // 首页拖拽上传支持
+        var uploadAreaHome = document.getElementById('uploadAreaHome');
+        if (uploadAreaHome) {
+            uploadAreaHome.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#1E9FFF';
+                this.style.background = '#f0f8ff';
+            });
+            uploadAreaHome.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = '#fafafa';
+            });
+            uploadAreaHome.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = '#fafafa';
+                var files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    var fileInput = document.getElementById('homeFileInput');
+                    fileInput.files = files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+
+        // ==================== 预习报告文件选择 ====================
+        var reportFileInput = document.getElementById('reportFileInput');
+        if (reportFileInput) {
+            reportFileInput.addEventListener('change', function(e) {
+                var files = e.target.files;
+                if (files.length > 0) {
+                    var names = [];
+                    for (var i = 0; i < files.length; i++) {
+                        names.push(files[i].name);
+                    }
+                    document.getElementById('reportSelectedFileName').textContent = names.join(', ');
+                    document.getElementById('reportFileNameDisplay').style.display = '';
+                } else {
+                    document.getElementById('reportFileNameDisplay').style.display = 'none';
+                }
+            });
+        }
+
+        // 预习报告拖拽上传支持
+        var uploadAreaReport = document.getElementById('uploadAreaReport');
+        if (uploadAreaReport) {
+            uploadAreaReport.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#1E9FFF';
+                this.style.background = '#f0f8ff';
+            });
+            uploadAreaReport.addEventListener('dragleave', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = '#fafafa';
+            });
+            uploadAreaReport.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#ddd';
+                this.style.background = '#fafafa';
+                var files = e.dataTransfer.files;
+                if (files.length > 0) {
+                    var fileInput = document.getElementById('reportFileInput');
+                    fileInput.files = files;
+                    fileInput.dispatchEvent(new Event('change'));
+                }
+            });
+        }
+    </script>
+	<script src="js/responsive.js"></script>
+</body>
+</html>
+

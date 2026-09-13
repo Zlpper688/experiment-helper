@@ -38,12 +38,17 @@ experiment-helper/
 ├── userscript/                       # Tampermonkey 单文件脚本
 │   ├── experiment-helper.user.js
 │   └── README.md
-└── extension/                        # Chrome/Edge 扩展（Manifest V3）
-    ├── manifest.json
-    ├── shared.js                     # 节次码解析 / 课表解析 / 冲突检测（纯函数）
-    ├── content.js                    # 注入实验列表页与我的实验页
-    ├── panel.css / options.*         # 面板与课表设置页
-    └── vendor/                       # pdf.js（Apache-2.0，本地 PDF 解析用）
+├── extension/                        # Chrome/Edge 扩展（Manifest V3）
+│   ├── manifest.json
+│   ├── shared.js                     # 节次码解析 / 课表解析 / 冲突检测（纯函数）
+│   ├── content.js                    # 注入实验列表页与我的实验页
+│   ├── panel.css / options.*         # 面板与课表设置页
+│   └── vendor/                       # pdf.js（Apache-2.0，本地 PDF 解析用）
+└── site-reference/                   # 目标网站源码快照（已脱敏，对照开发用）
+    ├── pages/                        # 各页面 HTML（含路由对照表见其 README）
+    ├── assets/                       # 站点自有 JS / CSS
+    ├── data/                         # 实验列表真实数据样本（可当测试 fixture）
+    └── WEBSITE_BUSINESS_LOGIC_ANALYSIS.md   # 业务逻辑完整分析报告
 ```
 
 ## 安全与隐私

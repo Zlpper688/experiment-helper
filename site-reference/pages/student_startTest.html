@@ -1,0 +1,342 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>答题测试 - 物理实验测试----禁止预约</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+	<link rel="stylesheet" href="css/responsive.css">
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+        }
+        .layui-body { padding: 20px; }
+        .quiz-container { max-width: 800px; margin: 0 auto; }
+        .question-card { 
+            background: #fff; 
+            border: 1px solid #e6e6e6; 
+            border-radius: 4px; 
+            margin-bottom: 15px; 
+            padding: 15px;
+        }
+        .question-title { 
+            font-size: 16px; 
+            font-weight: bold; 
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .question-type {
+            display: inline-block;
+            background: #1E9FFF;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-right: 10px;
+        }
+        .options { margin-left: 20px; }
+        .option-item { 
+            display: flex;
+            align-items: center;
+            padding: 6px 10px; 
+            margin-bottom: 5px; 
+            background: #f8f8f8; 
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            line-height: 1.4;
+            min-height: 32px;
+        }
+        .option-item:hover { background: #e6f7ff; }
+        .option-item.selected { background: #1890ff; color: white; }
+        .option-item input[type="radio"], .option-item input[type="checkbox"] {
+            margin-right: 8px;
+            flex-shrink: 0;
+            width: 15px;
+            height: 15px;
+        }
+        .timer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #fff;
+            padding: 15px 25px;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            font-size: 18px;
+            font-weight: bold;
+            z-index: 1000;
+        }
+        .timer.warning { color: #ff5722; }
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #e6e6e6;
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1E9FFF, #5FB878);
+            transition: width 0.3s;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            line-height: 1.2;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <!-- 顶部导航栏 -->
+        <div class="layui-header">
+            <div class="layui-logo">学生预约实验课程系统</div>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:;">
+                        <span>翟宏鹏</span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="index.php?controller=login&action=logout">退出登录</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 左侧菜单 -->
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=index">首页</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=experimentList">实验课程查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=myExperiments">我的实验</a>
+                    </li>
+                    <li class="layui-nav-item layui-this">
+                        <a href="index.php?controller=student&action=testList">实验测试</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=processData">实验过程数据</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=resultData">实验数据处理</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=scoreQuery">成绩查询</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=downloadReport">下载实验报告</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="index.php?controller=student&action=previewReport">预习报告上传</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="layui-body">
+            <!-- 计时器 -->
+            <div class="timer" id="timer">
+                <i class="layui-icon layui-icon-time"></i> 
+                <span id="timeDisplay">15:00</span>
+            </div>
+
+            <div class="quiz-container">
+        <div class="layui-card">
+            <div class="layui-card-header" style="font-size: 18px; padding: 15px 20px;">
+                <i class="layui-icon layui-icon-survey"></i> 
+                物理实验测试----禁止预约 - 预习测试
+            </div>
+            <div class="layui-card-body">
+                <!-- 进度条 -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+                </div>
+                
+                <form id="quizForm" method="POST" action="index.php?controller=student&action=submitTest">
+				   <input type="hidden" name="csrf_token" value="REDACTED">                    <input type="hidden" name="flowNum" value="4933">
+                    
+                                        <div class="question-card" data-question="1">
+                        <div class="question-title">
+                            <span class="question-type">
+                                单选                            </span>
+                            <span class="question-number">1.</span>
+                            a                            <span style="color: #999; font-size: 12px; margin-left: 10px;">
+                                (20分)
+                            </span>
+                        </div>
+                        
+                        <div class="options">
+                                                            <!-- 单选/多选 -->
+                                                                <label class="option-item">
+                                    <input type="radio" 
+                                           name="answers[489]" 
+                                           value="A"
+                                           onchange="updateProgress()">
+                                    A.                                     B                                </label>
+                                                                <label class="option-item">
+                                    <input type="radio" 
+                                           name="answers[489]" 
+                                           value="B"
+                                           onchange="updateProgress()">
+                                    B.                                     D                                </label>
+                                                                <label class="option-item">
+                                    <input type="radio" 
+                                           name="answers[489]" 
+                                           value="C"
+                                           onchange="updateProgress()">
+                                    C.                                     C                                </label>
+                                                                <label class="option-item">
+                                    <input type="radio" 
+                                           name="answers[489]" 
+                                           value="D"
+                                           onchange="updateProgress()">
+                                    D.                                     A                                </label>
+                                                                
+                                                    </div>
+                    </div>
+                                        
+                    <button type="submit" class="layui-btn layui-btn-normal submit-btn" onclick="return confirmSubmit()">
+                        <i class="layui-icon layui-icon-ok"></i> 提交答案
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+
+    <script src="../layui/layui.js"></script>
+    <script>
+    layui.use(['layer', 'element'], function(){
+        var layer = layui.layer;
+        var element = layui.element;
+        element.render();
+    });
+
+    // 倒计时功能
+    var totalTime = 15 * 60; // 15分钟
+    var currentTime = totalTime;
+    
+    function updateTimer() {
+        var minutes = Math.floor(currentTime / 60);
+        var seconds = currentTime % 60;
+        document.getElementById('timeDisplay').textContent = 
+            (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        
+        if (currentTime <= 300) { // 5分钟警告
+            document.getElementById('timer').classList.add('warning');
+        }
+        
+        if (currentTime <= 0) {
+            autoSubmit();
+        }
+        
+        currentTime--;
+    }
+    
+    var timerInterval = setInterval(updateTimer, 1000);
+    
+    // 自动提交
+    function autoSubmit() {
+        clearInterval(timerInterval);
+        layer.msg('考试时间到，正在自动提交...', {icon: 0, time: 2000}, function(){
+            document.getElementById('quizForm').submit();
+        });
+    }
+    
+    // 更新进度条
+    function updateProgress() {
+        var totalQuestions = 1;
+        var answeredQuestions = 0;
+        
+        // 统计已回答的题目
+        var questionCards = document.querySelectorAll('.question-card');
+        questionCards.forEach(function(card) {
+            var inputs = card.querySelectorAll('input[type="radio"], input[type="checkbox"], input[type="text"]');
+            var isAnswered = false;
+            inputs.forEach(function(input) {
+                if ((input.type === 'radio' || input.type === 'checkbox') && input.checked) {
+                    isAnswered = true;
+                } else if (input.type === 'text' && input.value.trim() !== '') {
+                    isAnswered = true;
+                }
+            });
+            if (isAnswered) answeredQuestions++;
+        });
+        
+        var progress = (answeredQuestions / totalQuestions) * 100;
+        document.getElementById('progressBar').style.width = progress + '%';
+    }
+    
+    // 确认提交
+    function confirmSubmit() {
+        var totalQuestions = 1;
+        var answeredQuestions = 0;
+        
+        var questionCards = document.querySelectorAll('.question-card');
+        questionCards.forEach(function(card) {
+            var inputs = card.querySelectorAll('input[type="radio"], input[type="checkbox"], input[type="text"]');
+            var isAnswered = false;
+            inputs.forEach(function(input) {
+                if ((input.type === 'radio' || input.type === 'checkbox') && input.checked) {
+                    isAnswered = true;
+                } else if (input.type === 'text' && input.value.trim() !== '') {
+                    isAnswered = true;
+                }
+            });
+            if (isAnswered) answeredQuestions++;
+        });
+        
+        if (answeredQuestions < totalQuestions) {
+            return confirm('您还有 ' + (totalQuestions - answeredQuestions) + ' 道题未作答，确定要提交吗？');
+        }
+        
+        return confirm('确定要提交答案吗？提交后将无法修改。');
+    }
+    
+    // 选项点击效果
+    document.querySelectorAll('.option-item').forEach(function(item) {
+        item.addEventListener('click', function(e) {
+            if (e.target.tagName !== 'INPUT') {
+                var input = this.querySelector('input');
+                if (input.type === 'radio') {
+                    input.checked = true;
+                } else if (input.type === 'checkbox') {
+                    input.checked = !input.checked;
+                }
+                updateProgress();
+            }
+        });
+    });
+    
+    // 页面加载时初始化进度
+    updateProgress();
+    
+    // 防止刷新页面
+    window.onbeforeunload = function() {
+        return "您正在答题中，确定要离开吗？";
+    };
+    
+    // 提交时取消提示
+    document.getElementById('quizForm').addEventListener('submit', function() {
+        window.onbeforeunload = null;
+    });
+    </script>
+	<script src="js/responsive.js"></script>
+</body>
+</html>
