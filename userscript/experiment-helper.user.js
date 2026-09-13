@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         实验选课助手（油猴版）
 // @namespace    sau-lab-helper-tampermonkey
-// @version      1.6.3
-// @description  开放实验教学管理系统（wlsy.webvpn.sau.edu.cn/lab2026）实验列表筛选增强：关键字/星期/节组/老师筛选、仅看可约、隐藏已满/课表冲突/实验间冲突/已选同类/不想选/已选、仅看已选、仅看测试通过、剩余人数排序、节次人话徽标、一键预约（fetch POST 不跳页）、自动抢课（定时刷新监控可约场次）、已预约/必做/同类已选/不想选标记、每行状态徽标（✓可约/已预约/已满/课表冲突/实验冲突/同类已选/不想选）、选课进度提示（AI还需X/BI还需Y/必做未选）、页面内课表设置弹层（支持直接上传课表 PDF 自动解析）。
+// @version      1.7.0
+// @description  开放实验教学管理系统（wlsy.webvpn.sau.edu.cn/lab2026）实验列表筛选增强：关键字/星期/节组/老师筛选、仅看可约、隐藏已满/课表冲突/实验间冲突/已选同类/不想选/已选、仅看已选、仅看测试通过、剩余人数排序、节次人话徽标、一键预约（fetch POST 不跳页）、自动抢课（定时刷新监控可约场次）、已预约/必做/同类已选/不想选标记、每行状态徽标（✓可约/已预约/已满/课表冲突/实验冲突/同类已选/不想选）、选课进度提示（AI还需X/BI还需Y/必做未选）、页面内课表设置弹层（支持直接上传课表 PDF 自动解析）、新人交接检查（列表周次显示 + 已预约实验自动同步确认）。
 // @match        https://wlsy.webvpn.sau.edu.cn/lab2026/index.php*
 // @run-at       document-end
 // @grant        GM_getValue
@@ -1119,10 +1119,17 @@
         const mandatoryMissing = EXPERIMENT_META.mandatory.filter(k =>
           !reservedExps.some(e => e.name.indexOf(k) >= 0)
         );
+        // 交接信息：当前可预约周次（列表场次推导）+ 已预约实验明细（悬停状态栏查看）
+        const listWeek = rowsData.reduce((mx, r) => Math.max(mx, r.slot ? r.slot.week : 0), 0) || undefined;
+        const reservedDetail = reservedExps.map(e =>
+          '- ' + e.name + '：' + humanizeSlotCode(e.slot.week + '-' + e.slot.day + '-' + e.slot.slotGroup, e.hours)
+        );
         panel.setScheduleInfo(courseList.length, reservedExps.length, {
           reservedTypes: reservedTypes.size,
           mandatoryMissing: mandatoryMissing,
-          fetchError: fetchError
+          fetchError: fetchError,
+          listWeek: listWeek,
+          reservedDetail: reservedDetail
         });
         panel.apply();
       }
@@ -1505,6 +1512,10 @@
       scheduleCount = n;
       schedEl.classList.remove('ok', 'warn');
       const parts = [];
+      // 交接检查①：当前可预约周次（从列表场次代码推导，即只能预约的"下一周"）
+      if (progress && progress.listWeek) {
+        parts.push('列表场次：第' + progress.listWeek + '周');
+      }
       if (progress && progress.fetchError) {
         parts.push('⚠ 获取已预约数据失败：' + progress.fetchError + '（冲突检测/已选标记可能不准确）');
         schedEl.classList.add('warn');
@@ -1513,8 +1524,13 @@
       } else {
         parts.push('尚未设置课表');
       }
-      if (reservedN !== undefined && reservedN > 0) {
-        parts.push('已预约 ' + reservedN + ' 个实验');
+      // 交接检查②：已预约实验确认（每次打开列表页自动同步"我的实验"页）
+      if (progress && progress.fetchError) {
+        // 同步失败时不显示数量，避免误导
+      } else if (reservedN > 0) {
+        parts.push('已预约 ' + reservedN + ' 个实验（自动同步）');
+      } else {
+        parts.push('已预约 0 个实验（自动同步）');
       }
       // 选课进度（来自 PDF 要求：AI需9个 / BI需6个）——仅在数据加载成功时显示
       if (progress && !progress.fetchError) {
@@ -1529,6 +1545,12 @@
         }
       }
       schedEl.textContent = parts.join(' · ') + (n > 0 ? '，冲突场次已标红。' : '，无法做冲突检测——点击右上角「课表设置」导入。');
+      // 交接检查②明细：悬停状态栏查看已同步的已预约实验（名称+场次）
+      if (progress && progress.reservedDetail && progress.reservedDetail.length) {
+        schedEl.title = '已自动同步「我的实验」页数据：\n' + progress.reservedDetail.join('\n') + '\n（每次打开列表页自动重新同步）';
+      } else {
+        schedEl.title = '';
+      }
       schedEl.classList.toggle('ok', n > 0);
       schedEl.classList.toggle('warn', n === 0);
       apply();

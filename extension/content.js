@@ -238,10 +238,17 @@
           const mandatoryMissing = EXPERIMENT_META.mandatory.filter(k =>
             !reservedExps.some(e => e.name.indexOf(k) >= 0)
           );
+          // 交接信息：当前可预约周次（列表场次推导）+ 已预约实验明细（悬停状态栏查看）
+          const listWeek = rowsData.reduce((mx, r) => Math.max(mx, r.slot ? r.slot.week : 0), 0) || undefined;
+          const reservedDetail = reservedExps.map(e =>
+            '- ' + e.name + '：' + humanizeSlotCode(e.slot.week + '-' + e.slot.day + '-' + e.slot.slotGroup, e.hours)
+          );
           panel.setScheduleInfo(courses.length, reservedExps.length, {
             reservedTypes: reservedTypes.size,
             mandatoryMissing: mandatoryMissing,
-            fetchError: fetchError
+            fetchError: fetchError,
+            listWeek: listWeek,
+            reservedDetail: reservedDetail
           });
           panel.apply();
         });
@@ -639,6 +646,10 @@
     function setScheduleInfo(n, reservedN, progress) {
       scheduleCount = n;
       const parts = [];
+      // 交接检查①：当前可预约周次（从列表场次代码推导，即只能预约的"下一周"）
+      if (progress && progress.listWeek) {
+        parts.push('列表场次：第' + progress.listWeek + '周');
+      }
       if (progress && progress.fetchError) {
         parts.push('⚠ 获取已预约数据失败：' + progress.fetchError + '（冲突检测/已选标记可能不准确）');
         schedEl.classList.add('warn');
@@ -647,8 +658,13 @@
       } else {
         parts.push('尚未设置课表');
       }
-      if (reservedN !== undefined && reservedN > 0) {
-        parts.push('已预约 ' + reservedN + ' 个实验');
+      // 交接检查②：已预约实验确认（每次打开列表页自动同步"我的实验"页）
+      if (progress && progress.fetchError) {
+        // 同步失败时不显示数量，避免误导
+      } else if (reservedN > 0) {
+        parts.push('已预约 ' + reservedN + ' 个实验（自动同步）');
+      } else {
+        parts.push('已预约 0 个实验（自动同步）');
       }
       // 选课进度（来自 PDF 要求：AI需9个 / BI需6个）——仅在数据加载成功时显示
       if (progress && !progress.fetchError) {
@@ -663,6 +679,12 @@
         }
       }
       schedEl.textContent = parts.join(' · ') + (n > 0 ? '，冲突场次已标红。' : '，无法做冲突检测——点击右上角「课表设置」导入。');
+      // 交接检查②明细：悬停状态栏查看已同步的已预约实验（名称+场次）
+      if (progress && progress.reservedDetail && progress.reservedDetail.length) {
+        schedEl.title = '已自动同步「我的实验」页数据：\n' + progress.reservedDetail.join('\n') + '\n（每次打开列表页自动重新同步）';
+      } else {
+        schedEl.title = '';
+      }
       schedEl.classList.toggle('ok', n > 0);
       schedEl.classList.toggle('warn', n === 0);
       apply();

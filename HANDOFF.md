@@ -21,7 +21,7 @@
 
 | | 扩展版 `extension/` | 油猴版 `userscript/experiment-helper.user.js` |
 |---|---|---|
-| 版本号 | manifest.json `0.5.2`（独立管理） | 头部 `@version 1.6.3`（独立管理，与扩展版**不同步是正常的**） |
+| 版本号 | manifest.json `0.6.0`（独立管理） | 头部 `@version 1.7.0`（独立管理，与扩展版**不同步是正常的**） |
 | 注入方式 | MV3 content_scripts，`document_idle` | Tampermonkey，`document-end` |
 | 纯函数 | `shared.js`（独立文件） | 内嵌在脚本第 2 节，**逐函数与 shared.js 保持一致** |
 | 存储 | `chrome.storage.local` | `GM_getValue/GM_setValue`（降级 localStorage，键加 `ulph:` 前缀） |
@@ -118,6 +118,8 @@
 | 表格列变化 | content.js `parseRows` | 先在控制台核对真实列序 |
 | 新增必做实验 | shared.js `EXPERIMENT_META.mandatory` | 用 `normalizeExpName` 后的规范名 |
 | 纯函数回归验证 | 不依赖 DOM，可直接 Node 跑：`node -e "eval(require('fs').readFileSync('extension/shared.js','utf8')); console.log(humanizeSlotCode('3-1-2',2))"` | shared.js 用 `const` 声明，eval 作用域内直接可用 |
+| 新人交接/首次使用 | `setScheduleInfo` 已内置三段确认：①`列表场次：第N周`（从当前列表行 `week` 取 max）②`已预约 N 个实验（自动同步）`（`fetchReservedExperiments` 每次进列表页自动跑）③课表导入状态。新用户看到 `已预约 0 个实验` 属正常，引导其先导入课表再选课 | 同步两版；fetch 失败时**不显示**「已预约 0」以免误导，改显示同步失败提示 |
+| 新人交接/首次使用 | `setScheduleInfo` 已内置三段确认：①`列表场次：第N周`（从当前列表行 `week` 取 max）②`已预约 N 个实验（自动同步）`（`fetchReservedExperiments` 每次进列表页自动跑）③课表导入状态。新用户看到 `已预约 0 个实验` 属正常，引导其先导入课表再选课 | 同步两版；fetch 失败时**不显示**「已预约 0」以免误导，改显示同步失败提示 |
 
 ## 九、测试与验收清单
 
@@ -126,13 +128,14 @@
 3. 课表设置：粘贴一段真实课表 PDF 文本 → 解析出条目且 `day=null` 待补 → 补选后列表页冲突行标红
 4. 一键预约一次（真预约前先用"已满"行验证失败分支的提示）
 5. 油猴版粘贴安装后重复 2–4
-6. **验收底线**：不点预约按钮时，Network 面板不得出现任何 POST 请求
+6. **新人交接验收**：清空全部本地数据后进列表页，状态栏依次显示 ①`列表场次：第N周`（N 为当前列表真实周次）②`已预约 0 个实验（自动同步）`（新用户正常态）③`未导入课表`；导入课表 + 已有预约后，②变为实际数量且悬停可见预约明细
+7. **验收底线**：不点预约按钮时，Network 面板不得出现任何 POST 请求
 
 ## 十、已知坑
 
 - **乱码**：Windows PowerShell 控制台显示中文提交信息/文件会乱，实际存储是 UTF-8，别当成 bug 反复"修复"编码。
 - **两套前缀**：`lph-`（扩展）与 `ulph-`（油猴）同时存在是有意的，防同页双装冲突，不要统一。
-- **版本号**：油猴 `1.6.x` 与扩展 `0.5.x` 各自独立递增，不要互相"对齐"。
+- **版本号**：油猴 `1.7.x` 与扩展 `0.6.x` 各自独立递增，不要互相"对齐"。
 - **同装两版**会出现两层面板，属预期行为，README 已提示用户二选一。
 - **vendor/cmaps** 看着一堆小文件很碍眼，但删了中文 PDF 解析就坏。
 - WebVPN 环境下 CDN（油猴版加载 pdf.js）偶发不可达，属用户网络问题，扩展版无此问题。
