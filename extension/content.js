@@ -136,10 +136,13 @@
       if (schedEl0) schedEl0.textContent = '正在加载已预约数据…';
       fetchReservedExperiments().then(result => {
         const reservedExps = result.exps || [];
+        const doneExps = result.doneExps || [];
         const fetchError = result.error;
         // 已预约实验的归一化名称集合 + 精确 slot 集合
         const reservedNorms = new Set(reservedExps.map(e => normalizeExpName(e.name)));
         const reservedSlots = new Set(reservedExps.map(e => e.slot.week + '-' + e.slot.day + '-' + e.slot.slotGroup));
+        // 已做完实验的归一化名称集合（来自成绩查询页）
+        const doneNorms = new Set(doneExps.map(n => normalizeExpName(n)));
         for (const r of rowsData) {
           const rNorm = normalizeExpName(r.name);
           const rSlotKey = r.slot ? (r.slot.week + '-' + r.slot.day + '-' + r.slot.slotGroup) : '';
@@ -151,6 +154,11 @@
           // 同类匹配：同名但不同时间段 = 选过不用再选
           else if (reservedNorms.has(rNorm)) {
             r.isSameType = true;
+            r.tr.classList.add('lph-dup-row');
+          }
+          // 已做匹配：成绩查询页有记录 = 以前做过，不用再选
+          else if (doneNorms.has(rNorm)) {
+            r.isDone = true;
             r.tr.classList.add('lph-dup-row');
           }
           // 不想选标记
@@ -223,6 +231,7 @@
               else if (r.testNotTaken) { text = '未测试'; cls = 'lph-status-dup'; }
               else if (r.courseConflicts && r.courseConflicts.length) { text = '课表冲突'; cls = 'lph-status-conflict'; }
               else if (r.expConflicts && r.expConflicts.length) { text = '实验冲突'; cls = 'lph-status-exp'; }
+              else if (r.isDone) { text = '已做'; cls = 'lph-status-dup'; }
               else if (r.isSameType) { text = '同类已选'; cls = 'lph-status-dup'; }
               else if (r.canReserve) { text = '✓可约'; cls = 'lph-status-ok'; }
               if (text) {
@@ -248,7 +257,8 @@
             mandatoryMissing: mandatoryMissing,
             fetchError: fetchError,
             listWeek: listWeek,
-            reservedDetail: reservedDetail
+            reservedDetail: reservedDetail,
+            doneCount: doneExps.length
           });
           panel.apply();
         });
@@ -271,12 +281,12 @@
       const url = new URL(location.href);
       url.searchParams.set('action', 'myExperiments');
       const resp = await fetch(url.toString(), { credentials: 'same-origin' });
-      if (!resp.ok) return { error: 'HTTP ' + resp.status, exps: [] };
+      if (!resp.ok) return { error: 'HTTP ' + resp.status, exps: [], doneExps: [] };
       const html = await resp.text();
       const doc = new DOMParser().parseFromString(html, 'text/html');
       // 检查是否被重定向到登录页
       if (doc.querySelector('input[name="username"]') || /登录|login/i.test(doc.title || '')) {
-        return { error: '会话已过期，请重新登录', exps: [] };
+        return { error: '会话已过期，请重新登录', exps: [], doneExps: [] };
       }
       const exps = [];
       for (const tr of doc.querySelectorAll('table tr')) {
@@ -293,8 +303,27 @@
           }
         }
       }
-      return { error: null, exps: exps };
-    } catch (e) { return { error: (e.message || e), exps: [] }; }
+      // 同时请求成绩查询页，获取已做完的实验（有成绩记录的）
+      const doneExps = [];
+      try {
+        const scoreUrl = new URL(location.href);
+        scoreUrl.searchParams.set('action', 'scoreQuery');
+        const scoreResp = await fetch(scoreUrl.toString(), { credentials: 'same-origin' });
+        if (scoreResp.ok) {
+          const scoreHtml = await scoreResp.text();
+          const scoreDoc = new DOMParser().parseFromString(scoreHtml, 'text/html');
+          if (!scoreDoc.querySelector('input[name="username"]') && !/登录|login/i.test(scoreDoc.title || '')) {
+            for (const tr of scoreDoc.querySelectorAll('table tr')) {
+              const c = tr.cells;
+              if (!c || c.length < 2 || c[0].tagName === 'TH') continue;
+              const name = (c[0].textContent || '').trim();
+              if (name) doneExps.push(name);
+            }
+          }
+        }
+      } catch (e2) { /* scoreQuery 获取失败不影响主流程 */ }
+      return { error: null, exps: exps, doneExps: doneExps };
+    } catch (e) { return { error: (e.message || e), exps: [], doneExps: [] }; }
   }
 
   /* 一键预约：fetch POST 不跳页 */
@@ -410,7 +439,7 @@
       '<label class="lph-chk"><input type="checkbox" id="lph-hide-exp-conflict">隐藏实验冲突</label>' +
       '<label class="lph-chk"><input type="checkbox" id="lph-hide-full">隐藏已满</label>' +
       '<label class="lph-chk"><input type="checkbox" id="lph-only-tested">仅看测试通过</label>' +
-      '<label class="lph-chk"><input type="checkbox" id="lph-hide-dup" checked>隐藏已选同类</label>' +
+      '<label class="lph-chk"><input type="checkbox" id="lph-hide-dup" checked>隐藏已选/已做同类</label>' +
       '<label class="lph-chk"><input type="checkbox" id="lph-hide-unwanted" checked>隐藏不想选</label>' +
       '<label class="lph-chk"><input type="checkbox" id="lph-only-reserved">仅看已选</label>' +
       '<label class="lph-chk"><input type="checkbox" id="lph-hide-reserved">隐藏已选</label>' +
@@ -539,9 +568,9 @@
       autoTimer = setInterval(() => {
         autoCount++;
         autoStatus.textContent = '第 ' + autoCount + ' 次刷新…';
-        // 智能选课优先级：必做未选 > 普通可约，均跳过同类已选/已预约/有冲突
+        // 智能选课优先级：必做未选 > 普通可约，均跳过同类已选/已做/已预约/有冲突
         const candidates = rowsData.filter(r =>
-          r.canReserve && !r.full && !(r.conflicts && r.conflicts.length) && !r.isReserved && !r.isSameType && !r.isUnwanted
+          r.canReserve && !r.full && !(r.conflicts && r.conflicts.length) && !r.isReserved && !r.isSameType && !r.isDone && !r.isUnwanted
         );
         // 优先必做实验
         const target = candidates.find(r => r.isMandatory) || candidates[0];
@@ -581,7 +610,7 @@
         if (ok && onlyTested.checked) ok = r.testPassed;
         if (ok && hideConflict.checked) ok = !(r.courseConflicts && r.courseConflicts.length);
         if (ok && hideExpConflict.checked) ok = !(r.expConflicts && r.expConflicts.length);
-        if (ok && hideDup.checked) ok = !r.isSameType;
+        if (ok && hideDup.checked) ok = !r.isSameType && !r.isDone;
         if (ok && hideUnwanted.checked) ok = !r.isUnwanted;
         if (ok && onlyReserved.checked) ok = !!r.isReserved;
         if (ok && hideReserved.checked) ok = !r.isReserved;
@@ -665,6 +694,10 @@
         parts.push('已预约 ' + reservedN + ' 个实验（自动同步）');
       } else {
         parts.push('已预约 0 个实验（自动同步）');
+      }
+      // 交接检查②补充：已做完的实验（来自成绩查询页自动同步）
+      if (progress && !progress.fetchError && progress.doneCount > 0) {
+        parts.push('已做 ' + progress.doneCount + ' 个（自动同步）');
       }
       // 选课进度（来自 PDF 要求：AI需9个 / BI需6个）——仅在数据加载成功时显示
       if (progress && !progress.fetchError) {
