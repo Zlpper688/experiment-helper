@@ -34,6 +34,7 @@
 
 ```
 experiment-helper/
+├── HANDOFF.md                        # 二次开发交接提示词（接手必读 / 可直接投喂 AI）
 ├── userscript/                       # Tampermonkey 单文件脚本
 │   ├── experiment-helper.user.js
 │   └── README.md
